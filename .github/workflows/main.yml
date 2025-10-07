@@ -1,4 +1,4 @@
-name: Build SDL2 console apps
+name: Build SDL2 console apps (Switch)
 
 on:
   push:
@@ -9,33 +9,22 @@ on:
       - main
 
 jobs:
-  all:
+  build-switch:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
-          - platform: wiiu
-            ext: wuhb
           - platform: switch
             ext: nro
-          # - platform: 3ds
-          #   ext: 3dsx
-          - platform: wii
-            ext: dol
     container:
       image: ghcr.io/fortheusers/sealeo:latest
     steps:
-    - uses: actions/checkout@main
-      with:
-        submodules: recursive
-    - name: Build ${{ matrix.platform }}
-      run: make ${{ matrix.platform }}
-    - uses: actions/upload-artifact@v4
-      with:
-        name: appstore.${{ matrix.ext }}
-        path: /__w/hb-appstore/hb-appstore/appstore.${{ matrix.ext }}
-    - if: matrix.platform == 'wiiu'
-      uses: actions/upload-artifact@v4
-      with:
-        name: appstore.rpx
-        path: /__w/hb-appstore/hb-appstore/appstore.rpx
+      - uses: actions/checkout@main
+        with:
+          submodules: recursive
+      - name: Build ${{ matrix.platform }}
+        run: make ${{ matrix.platform }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: appstore.${{ matrix.ext }}
+          path: /__w/hb-appstore/hb-appstore/appstore.${{ matrix.ext }}
